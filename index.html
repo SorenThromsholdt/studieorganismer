@@ -1,1 +1,242 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<title>Studieorganismer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background:#f4f4f4;
+    }
+    header {
+        padding: 30px;
+        text-align: center;
+        background: #234;
+        color: white;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    .card {
+        background:white;
+        border-radius:10px;
+        box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        overflow:hidden;
+        transition:0.3s;
+    }
+    .card img {
+        width:100%;
+        height:180px;
+        object-fit:cover;
+    }
+    .card h2 {
+        margin:15px;
+        font-size:20px;
+    }
+    .latin {
+        margin:0 15px;
+        font-style:italic;
+        color:#444;
+    }
+    .badges {
+        margin:10px 15px;
+    }
+    .badge {
+        display:inline-block;
+        background:#eee;
+        padding:4px 8px;
+        border-radius:6px;
+        margin-right:5px;
+        font-size:12px;
+    }
+    details {
+        padding: 0 15px 15px 15px;
+        cursor:pointer;
+    }
+    details summary {
+        font-weight:bold;
+        margin:10px 0;
+    }
+</style>
+</head>
+<body>
 
+<header>
+    <h1>Studieorganismer</h1>
+    <p>Klik på en art for at læse mere</p>
+</header>
+
+<div class="grid">
+
+<!-- Template for each species card -->
+<!-- 1: Aborre -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg">
+    <h2>Aborre</h2>
+    <p class="latin">Perca fluviatilis</p>
+    <div class="badges">
+        <span class="badge">Rød liste: LC arter.dk/observation/record-details/ad531fec-7a35-480d-beb0-af7b00f058bf)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Aborren er en af Danmarks mest almindelige rovfisk og kendetegnes af sin høje, sammenpressede krop og de karakteristiske mørke tværstriber på siderne. Finnerne er ofte rødlige, især bug- og gatfinnen. Arten trives i både søer, vandløb og brakvand, men foretrækker klart, iltrigt vand. Den jager i flok og lever af småfisk, krebsdyr og insektlarver. Gydningen sker tidligt forår, hvor hunnen lægger æg i lange bånd, som hænger mellem planter og rødder. Aborren kan blive mere end 40 år i sjældne tilfælde og er en vigtig nøglearter i søers økologi, fordi den regulerer mindre fiskebestande og dermed påvirker vandkvaliteten.[2](https://udv.arter.dk/taxa/taxon/details/926eddf8-f785-ea11-aa77-501ac539d1ea)
+        </p>
+    </details>
+</div>
+
+<!-- 2: Trepigget hundestejle -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Gasterosteus_aculeatus_P1190887a.jpg">
+    <h2>Trepigget hundestejle</h2>
+    <p class="latin">Gasterosteus aculeatus</p>
+    <div class="badges">
+        <span class="badge">Rød liste: LC arter.dk/observation/record-details/9c7a9bed-88a6-a503-4536-c022dc55242d)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Denne lille fisk har en langstrakt krop med tre karakteristiske pigge foran rygfinnen. Den kan leve i både fersk-, brak- og saltvand og forekommer i hele Danmark. Om foråret udvikler hannen en markant rødfarvet bug og bygger en rede af plantedele, som han forsvarer aggressivt. Hunnen lægger æg i reden, og hannen vogter æg og unger, indtil de er selvstændige. Hundestejlen lever af små krebsdyr, insekter og larver og optræder ofte i stimer. Den spiller en vigtig rolle i fødekæden som bytte for større fisk og fugle.[4](https://www.naturbasen.dk/art/3586/trepigget-hundestejle)
+        </p>
+    </details>
+</div>
+
+<!-- 3: Europæisk ål -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Anguilla_anguilla1.jpg">
+    <h2>Europæisk ål</h2>
+    <p class="latin">Anguilla anguilla</p>
+    <div class="badges">
+        <span class="badge">Rød liste: CR (kritisk truet) www.naturbasen.dk/art/3125/aal)</span>
+        <span class="badge">Fredet</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Den europæiske ål har en lang, slangelignende krop og en kompleks livscyklus. Den gyder i Sargassohavet, hvorefter larverne driver over Atlanten i op til to år, inden de som glasål når Europas kyster. Her bliver de til gulål, som lever i ferske eller brakvandssystemer i mange år, inden de forvandler sig til blankål og vandrer tilbage mod gydepladserne. Arten er hårdt ramt af sygdomme, spærringer i vandløb og overfiskeri. Ålen er nataktiv, altædende og kan bevæge sig over land i fugtigt vejr. Den spiller en vigtig økologisk rolle i vandmiljøet, men bestanden er kollapset drastisk de seneste årtier.[6](https://da.wikipedia.org/wiki/Europ%C3%A6isk_%C3%A5l)
+        </p>
+    </details>
+</div>
+
+<!-- 4: Stor vandsalamander -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Triturus_cristatus_MHNT.jpg">
+    <h2>Stor vandsalamander</h2>
+    <p class="latin">Triturus cristatus</p>
+    <div class="badges">
+        <span class="badge">Fredet</span>
+        <span class="badge">EU Habitatdirektiv bilag IV da.wikipedia.org/wiki/Stor_vandsalamander)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Stor vandsalamander er Danmarks største salamander. Den har mørk, vortet hud og en markant orange bug med sorte pletter. I yngletiden udvikler hannen en høj takket rygkam. Arten foretrækker små, solbeskinnede fisketomme vandhuller med rig undervandsvegetation. Den vandrer til vandhuller i det tidlige forår, hvor parringsspillet udføres gennem haleviftning og kropsbevægelser. Æggene foldes enkeltvis ind i vandplanter. Larverne lever i vand om sommeren, hvorefter de unge salamandre bevæger sig på land. Arten er sårbar over for vandhullers tilgroning og udsætning af fisk.[8](https://www.naturbasen.dk/art/730/stor-vandsalamander)
+        </p>
+    </details>
+</div>
+
+<!-- 5: Solaborre -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Lepomis_gibbosus_01.jpg">
+    <h2>Solaborre</h2>
+    <p class="latin">Lepomis gibbosus</p>
+    <div class="badges">
+        <span class="badge">Invasiv art (fremmed) lister.artsdatabanken.no/fremmedartslista/2023/2519)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Solaborren er en farverig, lille ferskvandsfisk, der oprindeligt stammer fra Nordamerika, men nu er udbredt i mange europæiske vande. Den har en høj, rund krop, ofte med orange og blålige markeringer langs hovedet og en karakteristisk mørk øreplet. Arten trives i varmt, stille vand med tæt vegetation og bygger redegruber, som hannen forsvarer under yngletiden. Solaborren har en bred fødepalette, herunder insekter, små krebsdyr og fiskeyngel, og kan dermed påvirke lokale økosystemer ved at konkurrere med hjemmehørende arter.[10](https://arter.dk/taxa/89803)
+        </p>
+    </details>
+</div>
+
+<!-- 6: Vandremusling -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Dreissena_polymorpha.jpg">
+    <h2>Vandremusling</h2>
+    <p class="latin">Dreissena polymorpha</p>
+    <div class="badges">
+        <span class="badge">Invasiv art /mst.dk/media/twyewvr1/vandremusling.pdf)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Vandremuslingen er en lille, trekantet musling kendt for sin evne til at danne tætte kolonier på sten, planter og tekniske installationer. Arten filtrerer store mængder vand og kan ændre økosystemer ved at reducere planktonmængden. Den stammer fra Sortehavsområdet, men har spredt sig kraftigt gennem europæiske vandveje. I Danmark findes den nu i mange søer, især i Østdanmark. Muslingen formerer sig eksplosivt, og dens larver driver frit rundt, før de finder et fast underlag. Arten kan skabe problemer for hjemmehørende muslinger og ændre fødegrundlaget for andre dyr.[12](https://da.wikipedia.org/wiki/Vandremusling)
+        </p>
+    </details>
+</div>
+
+<!-- 7: Lille vandsalamander -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Lissotriton_vulgaris_01.jpg">
+    <h2>Lille vandsalamander</h2>
+    <p class="latin">Lissotriton vulgaris</p>
+    <div class="badges">
+        <span class="badge">Fredet</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Lille vandsalamander er den mest udbredte salamander i Danmark. Den er mindre og slankere end stor vandsalamander og har en orange bug med mørke pletter. I yngletiden udvikler hannen en lav, bølget rygkam. Arten lever i små vandhuller, hvor æggene foldes enkeltvis ind i blade. Larverne har ydre gæller og udvikles over sommeren. På land skjuler salamanderen sig under sten og grene og jager smådyr om natten. Den er følsom for udsætning af fisk og tab af egnede vandhuller./www.naturhistoriskmuseum.dk/viden-forskning/naturlex/krybdyr-og-padder/lille-vandsalamander)
+        </p>
+    </details>
+</div>
+
+<!-- 8: Prymnesium parvum -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Prymnesium_parvum.jpg">
+    <h2>(intet dansk navn)</h2>
+    <p class="latin">Prymnesium parvum</p>
+    <div class="badges">
+        <span class="badge">Toksisk alge</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Prymnesium parvum er en mikroskopisk alge, der kan danne giftige opblomstringer og forårsage omfattende fiskedød. Den trives i brak- og ferskvand med højt salt- eller mineralindhold og tilpasser sig variabelt lys og næringsniveau. Algen kan vokse både fotosyntetisk og heterotroft ved at optage organiske forbindelser og bakterier. Arten findes globalt og har forårsaget flere alvorlige miljøhændelser, hvor giftstoffet prymnesin lammer fisks gæller. Dens opblomstringer begunstiges af varme perioder og ændringer i vandkemien./da.wikipedia.org/wiki/Prymnesium_parvum)
+        </p>
+    </details>
+</div>
+
+<!-- 9: Flodkrebs -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Astacus_astacus2.jpg">
+    <h2>Flodkrebs</h2>
+    <p class="latin">Astacus astacus</p>
+    <div class="badges">
+        <span class="badge">Rød liste: VU /animalia.bio/da/astacus-astacus)</span>
+        <span class="badge">EU Habitatdirektiv bilag V [16](https://eunis.eea.europa.eu/species/40)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Flodkrebsen er Europas største hjemmehørende ferskvandskrebs og lever i rene, iltrige søer og vandløb. Den har kraftige kløer, mørkebrun skal og bliver op til 20 cm lang. Arten er truet af invasive krebsearter som signalkrebs, der bærer krebsepest, som flodkrebsen dør af. Flodkrebsen skjuler sig i huller og under sten og er mest aktiv om natten, hvor den æder både plantemateriale og smådyr. Den er en indikatorart for god vandkvalitet og kræver stabile, uberørte levesteder for at overleve.[17](https://fiskeguiden.wwf.dk/species/procambarus-clarkii-astacus-astacus/)
+        </p>
+    </details>
+</div>
+
+<!-- 10: Signalkrebs -->
+<div class="card">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Pacifastacus_leniusculus.jpg">
+    <h2>Signalkrebs</h2>
+    <p class="latin">Pacifastacus leniusculus</p>
+    <div class="badges">
+        <span class="badge">Invasiv art (EU‑liste) /mst.dk/media/tkflw3df/signalkrebs.pdf)</span>
+    </div>
+    <details>
+        <summary>Beskrivelse</summary>
+        <p>
+        Signalkrebsen stammer fra Nordamerika, men er nu vidt udbredt i Europa som en invasiv art. Den genkendes på de store, glatte kløer med en tydelig hvid plet ved basen. Arten er robust, vokser hurtigt og tåler både højere temperaturer og dårligere vandkvalitet end flodkrebsen. Den bærer ofte krebsepest, som den selv er resistent overfor, men som dræber hjemmehørende arter. Signalkrebsen lever i søer og vandløb, hvor den graver gange og kan påvirke bundhabitater og vandplanter.[19](https://www.naturbasen.dk/art/8455/signalkrebs)
+        </p>
+    </details>
+</div>
+
+</div>
+</body>
+</html>
