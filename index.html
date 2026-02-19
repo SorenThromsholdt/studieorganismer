@@ -3,49 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Studieorganismer</title>
 
+<!-- FONT: Nunito – blød og organisk -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
+    :root {
+        /* Pastelfarver */
+        --red-critical: #f28b82;
+        --red-vulnerable: #fbbc04;
+        --green-protected: #81c995;
+        --blue-bilag2: #8ab6e1;
+        --purple-bilag4: #b39ddb;
+        --orange-bilag5: #f4b183;
+
+        /* Neutral */
+        --neutral-grey: #d9d9d9;
+        --soft-bg: #f4f7f5;
+        --card-bg: #ffffff;
+
+        /* Soft green header */
+        --header-start: #5c8a64;
+        --header-end: #7cae82;
+    }
+
     body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background: #eef2f5;
+        background: var(--soft-bg);
+        font-family: 'Nunito', sans-serif;
         color: #1d1d1d;
     }
 
     /* HEADER */
     header {
-        background: linear-gradient(135deg, #1f3a5b, #2d4f78);
-        color: white;
+        background: linear-gradient(135deg, var(--header-start), var(--header-end));
         text-align: center;
-        padding: 45px 20px;
+        padding: 55px 20px;
+        color: white;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
     header h1 {
         margin: 0;
-        font-size: 42px;
+        font-size: 44px;
         font-weight: 700;
+        letter-spacing: 0.5px;
     }
     header p {
-        margin: 10px 0 0;
-        opacity: 0.9;
-        font-size: 18px;
+        margin-top: 12px;
+        font-size: 19px;
+        font-weight: 300;
+        opacity: 0.95;
     }
 
-    /* GRID LAYOUT */
+    /* GRID */
     .grid {
         display: grid;
-        gap: 25px;
-        padding: 25px;
+        gap: 28px;
+        padding: 30px;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 
-    /* CARD */
+    /* CARDS */
     .card {
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        background: var(--card-bg);
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
         overflow: hidden;
-        transition: 0.3s;
+        cursor: pointer;
+        transition: transform 0.3s ease;
     }
     .card:hover {
         transform: translateY(-6px);
@@ -58,53 +86,116 @@
     .card h2 {
         margin: 18px;
         font-size: 22px;
+        font-weight: 700;
     }
     .latin {
-        margin: -12px 18px 8px 18px;
+        margin: -10px 18px 12px 18px;
         font-style: italic;
-        color: #3a3a3a;
+        color: #444;
         font-size: 15px;
+        font-weight: 400;
     }
 
-    /* BADGE ROW */
+    /* BADGE AREA */
     .badges {
-        margin: 12px 18px;
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
+        margin: 0 18px 18px 18px;
     }
     .badge {
-        padding: 5px 8px;
-        border-radius: 6px;
-        background: #d1d1d1;
+        padding: 6px 10px;
         font-size: 12px;
-        color: #1d1d1d;
+        border-radius: 8px;
         font-weight: 600;
+        background: var(--neutral-grey);
+        color: #1d1d1d;
     }
 
-    /* COLORS FOR ACTIVE BADGES */
-    .redlist-critical { background:#e63946; color:white; }
-    .redlist-vulnerable { background:#f4a259; color:white; }
-    .fredet { background:#2ecc71; color:white; }
-    .bilag2 { background:#3498db; color:white; }
-    .bilag4 { background:#9b59b6; color:white; }
-    .bilag5 { background:#e67e22; color:white; }
+    /* ACTIVE BADGE COLORS */
+    .redlist-critical { background: var(--red-critical) !important; color:white; }
+    .redlist-vulnerable { background: var(--red-vulnerable) !important; color:white; }
+    .badge-protected { background: var(--green-protected) !important; color:white; }
+    .badge-bilag2 { background: var(--blue-bilag2) !important; color:white; }
+    .badge-bilag4 { background: var(--purple-bilag4) !important; color:white; }
+    .badge-bilag5 { background: var(--orange-bilag5) !important; color:white; }
 
-    /* DESCRIPTION */
-    details {
-        padding: 0 18px 18px 18px;
-        cursor: pointer;
+    /* MODAL OVERLAY */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        z-index: 1000;
     }
-    summary {
-        margin-top: 10px;
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* MODAL WINDOW */
+    .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 90%;
+        max-width: 600px;
+        background: white;
+        border-radius: 22px;
+        padding-bottom: 25px;
+        transform: translate(-50%, -45%) scale(0.9);
+        opacity: 0;
+        transition: all 0.28s ease;
+        z-index: 1010;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+    .modal.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    .modal img {
+        width: 100%;
+        border-top-left-radius: 22px;
+        border-top-right-radius: 22px;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        margin-top: 0;
+        font-size: 26px;
+        font-weight: 700;
+    }
+    .modal-content p.latin {
+        margin: 0 0 15px 0;
+        color: #666;
+    }
+
+    .modal-close {
+        float: right;
+        font-size: 26px;
         font-weight: bold;
-        font-size: 15px;
+        cursor: pointer;
+        margin-top: -10px;
+        margin-right: -5px;
+        color: #333;
     }
-    details p {
-        margin-top: 10px;
-        line-height: 1.5;
+
+    .modal-description {
+        margin-top: 18px;
+        line-height: 1.6;
+        font-size: 16px;
     }
 </style>
+
 </head>
 
 <body>
@@ -114,362 +205,649 @@
     <p>Klik på en art for at læse mere</p>
 </header>
 
+<!-- MODAL STRUCTURE -->
+<div id="modalOverlay" class="modal-overlay"></div>
+
+<div id="modal" class="modal">
+    <div class="modal-close" onclick="closeModal()">&times;</div>
+    <img id="modalImg" src="" alt="">
+    <div class="modal-content">
+        <h2 id="modalTitle"></h2>
+        <p id="modalLatin" class="latin"></p>
+        <div id="modalBadges" class="badges"></div>
+        <div id="modalDescription" class="modal-description"></div>
+    </div>
+</div>
+
+<!-- GRID START -->
 <div class="grid">
 
-<!-- 1. Aborre -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg">
-<h2>Aborre</h2>
-<p class="latin">Perca fluviatilis</p>
 
-<div class="badges">
-    <!-- Rødlistestatus LC = grå -->
-    <span class="badge">Rødlistet: LC</span> <!-- citation: turn1search45 -->
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
+<!-- ========================= -->
+<!-- ===== 1. Aborre ======== -->
+<!-- ========================= -->
 
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Aborren er en vidt udbredt rovfisk med karakteristiske mørke lodrette striber og rødlige finner. Arten lever i søer, vandløb og brakvand og foretrækker klart vand med god iltning. Aborren danner ofte stimer og jager småfisk, krebsdyr og larver. I foråret lægger hunnen æg i lange bånd, som hænger i vegetation.<!-- citation: turn1search43 -->
-</p>
-</details>
-</div>
-
-<!-- 2. Trepigget hundestejle -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Gasterosteus_aculeatus_P1190887a.jpg">
-<h2>Trepigget hundestejle</h2>
-<p class="latin">Gasterosteus aculeatus</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: LC</span> <!-- citation: turn1search25 -->
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Hundestejlen er en lille fisk med tre rejste pigge og stor udbredelse i både fersk-, brak- og saltvand. I yngletiden bygger hannen en rede og får en rødlig bug. Den lever primært af små krebsdyr og insekter og forekommer i hele landet.<!-- citation: turn1search26 -->
-</p>
-</details>
-</div>
-
-<!-- 3. Europæisk ål -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Anguilla_anguilla1.jpg">
-<h2>Europæisk ål</h2>
-<p class="latin">Anguilla anguilla</p>
-
-<div class="badges">
-    <span class="badge redlist-critical">Rødlistet: CR</span> <!-- citation: turn1search55 -->
-    <span class="badge">Fredet: nej</span>
-    <span class="badge bilag2">Bilag II</span>
-    <span class="badge bilag4">Bilag IV</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Ålen har en unik livscyklus med gydning i Sargassohavet og opvækst i Europa. Den er nataktiv, lever af smådyr og fisk og kan overleve på fugtig jord. Arten er kritisk truet på grund af spærringer, sygdomme og tilbagegang i bestanden.<!-- citation: turn1search57 -->
-</p>
-</details>
-</div>
-
-<!-- 4. Stor vandsalamander -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Triturus_cristatus_MHNT.jpg">
-<h2>Stor vandsalamander</h2>
-<p class="latin">Triturus cristatus</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: LC</span>
-    <span class="badge fredet">Fredet</span>
-    <span class="badge bilag2">Bilag II</span>
-    <span class="badge bilag4">Bilag IV</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Stor vandsalamander er sortbrun med orange bug og store pletter. Hannen får en høj savtakket rygkam i yngletiden. Den yngler i små fiskefrie vandhuller og lever resten af året på land. Arten er følsom overfor tilgroning og tab af vandhuller.<!-- citation: turn1search31 -->
-</p>
-</details>
-</div>
-
-<!-- 5. Solaborre -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Lepomis_gibbosus_01.jpg">
-<h2>Solaborre</h2>
-<p class="latin">Lepomis gibbosus</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: NA</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Solaborren er en farverig, nordamerikansk art, der bygger redegruber og kan påvirke lokale økosystemer ved at æde yngel og konkurrere om føde.<!-- citation: turn1search13 -->
-</p>
-</details>
-</div>
-
-<!-- 6. Vandremusling -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Dreissena_polymorpha.jpg">
-<h2>Vandremusling</h2>
-<p class="latin">Dreissena polymorpha</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: NA</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Vandremuslingen er en lille, trekantet musling, der filtrerer vand og kan danne tætte kolonier. Den påvirker økosystemer kraftigt og betragtes som invasiv.<!-- citation: turn1search37 -->
-</p>
-</details>
-</div>
-
-<!-- 7. Lille vandsalamander -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Lissotriton_vulgaris_01.jpg">
-<h2>Lille vandsalamander</h2>
-<p class="latin">Lissotriton vulgaris</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: LC</span>
-    <span class="badge fredet">Fredet</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge bilag4">Bilag IV</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Lille vandsalamander har en orange bug med sorte pletter og en mindre rygkam end stor vandsalamander. Den yngler i små vandhuller og lever på land om sommeren.<!-- citation: turn1search4 -->
-</p>
-</details>
-</div>
-
-<!-- 8. Prymnesium parvum -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Prymnesium_parvum.jpg">
-<h2>Prymnesium parvum</h2>
-<p class="latin">Prymnesium parvum</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: –</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-En mikroskopisk alge, der kan danne giftige opblomstringer og forårsage fiskedød. Den trives i brakvand og næringsrigt ferskvand.<!-- citation: turn1search19 -->
-</p>
-</details>
-</div>
-
-<!-- 9. Flodkrebs -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Astacus_astacus2.jpg">
-<h2>Flodkrebs</h2>
-<p class="latin">Astacus astacus</p>
-
-<div class="badges">
-    <span class="badge redlist-vulnerable">Rødlistet: VU</span> <!-- citation: turn1search9 -->
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge bilag5">Bilag V</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Flodkrebsen er den oprindelige danske krebseart og lever i rene, iltrige vandløb. Arten trues af invasive krebs og sygdommen krebsepest.<!-- citation: turn1search10 -->
-</p>
-</details>
-</div>
-
-<!-- 10. Signalkrebs -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Pacifastacus_leniusculus.jpg">
-<h2>Signalkrebs</h2>
-<p class="latin">Pacifastacus leniusculus</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: –</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-En invasiv krebseart, der bærer krebsepest og udkonkurrerer flodkrebsen. Den har en tydelig hvid plet ved kloleddet.<!-- citation: turn1search51 -->
-</p>
-</details>
-</div>
-
-<!-- 11. Galizisk sumpkrebs -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Pontastacus_leptodactylus.png">
-<h2>Galizisk sumpkrebs</h2>
-<p class="latin">Astacus leptodactylus</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: NA</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-En introduceret krebseart, som trives i næringsrige søer og kan udkonkurrere den oprindelige flodkrebs.<!-- citation: turn1search8 -->
-</p>
-</details>
-</div>
-
-<!-- 12. Rødøret terrapin -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Trachemys_scripta_elegans_closeup.jpg">
-<h2>Rødøret terrapin</h2>
-<p class="latin">Trachemys scripta elegans</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: NA</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-En invasiv skildpadde indført som kæledyr, som kan overleve i danske søer og påvirke fødekæder ved at æde både planter og smådyr.<!-- citation: turn1search54 -->
-</p>
-</details>
-</div>
-
-<!-- 13. Grønbroget tudse -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Bufo_viridis_2.jpg">
-<h2>Grønbroget tudse</h2>
-<p class="latin">Bufotes viridis</p>
-
-<div class="badges">
-    <span class="badge redlist-critical">Rødlistet: EN</span> <!-- DK data -->
-    <span class="badge fredet">Fredet</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge bilag4">Bilag IV</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-En sjælden paddeart med grønne pletter og forkærlighed for varme, åbne habitater. Den yngler i lavvandede pytter, ofte nær kyster.<!-- citation: turn1search35 -->
-</p>
-</details>
-</div>
-
-<!-- 14. Strandtudse -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/80/Epidalea_calamita_1.jpg">
-<h2>Strandtudse</h2>
-<p class="latin">Epidalea calamita</p>
-
-<div class="badges">
-    <span class="badge redlist-vulnerable">Rødlistet: VU</span>
-    <span class="badge fredet">Fredet</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge bilag4">Bilag IV</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Strandtudsen lever i sandede, kystnære områder og er afhængig af lavvandede ynglevandhuller. Arten er truet af tab af levesteder.<!-- citation: turn1search36 -->
-</p>
-</details>
-</div>
-
-<!-- 15. Europæisk malle -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Silurus_glanis_-_Karlsruhe_Zoo_01.jpg">
-<h2>Europæisk malle</h2>
-<p class="latin">Silurus glanis</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: NA</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Mallen er en af Europas største ferskvandsfisk og lever i større søer. Den er en rovfisk, der især lever af fisk og krebsdyr.<!-- citation: turn1search12 -->
-</p>
-</details>
-</div>
-
-<!-- 16. Karpe -->
-<div class="card">
-<img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Cyprinus_carpio.jpeg">
-<h2>Karpe</h2>
-<p class="latin">Cyprinus carpio</p>
-
-<div class="badges">
-    <span class="badge">Rødlistet: NA</span>
-    <span class="badge">Fredet: nej</span>
-    <span class="badge">Bilag II: –</span>
-    <span class="badge">Bilag IV: –</span>
-    <span class="badge">Bilag V: –</span>
-</div>
-
-<details>
-<summary>Beskrivelse</summary>
-<p>
-Karpen er en stor, robust fisk, som trives i næringsrige søer og kan grumse vandet ved at rode i sedimentet.<!-- citation: turn1search16 -->
-</p>
-</details>
+<div class="card" onclick="openModal(
+    'Aborre',
+    'Perca fluviatilis',
+    'https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg',
+    [
+        {label:'Rødlistet: LC', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Aborren er en almindelig rovfisk med de karakteristiske mørke tværstriber og rødlige finner. Den trives i både søer, vandløb og brakvand, og foretrækker klart vand med god iltning. Arten lever i stimer og jager småfisk, krebsdyr og insektlarver. I foråret lægger hunnen æg i lange, geleagtige bånd, der fæstner sig til planter i vandet.</p>
+    <!-- citation: turn1search43 -->
+    `
+)">
+    <!-- citation: turn1search43 -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg" alt="Aborre">
+    <h2>Aborre</h2>
+    <p class="latin">Perca fluviatilis</p>
+    <div class="badges">
+        <span class="badge">Rødlistet: LC</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
 </div>
 
 
+
+<!-- ========================= -->
+<!-- === 2. Trepigget hundestejle === -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Trepigget hundestejle',
+    'Gasterosteus aculeatus',
+    'https://upload.wikimedia.org/wikipedia/commons/7/79/Gasterosteus_aculeatus_P1190887a.jpg',
+    [
+        {label:'Rødlistet: LC', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Trepigget hundestejle er en lille, langstrakt fisk med tre rejste pigge foran rygfinnen. Arten lever i både fersk-, brak- og saltvand og er udbredt i hele Danmark. I yngletiden får hannen en rød bug og bygger en rede af plantemateriale. Den lever især af små krebsdyr og larver.</p>
+    <!-- citation: turn1search26 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Gasterosteus_aculeatus_P1190887a.jpg" alt="Trepigget hundestejle">
+    <h2>Trepigget hundestejle</h2>
+    <p class="latin">Gasterosteus aculeatus</p>
+    <div class="badges">
+        <span class="badge">Rødlistet: LC</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
 </div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 3. Europæisk ål ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Europæisk ål',
+    'Anguilla anguilla',
+    'https://upload.wikimedia.org/wikipedia/commons/b/b3/Anguilla_anguilla1.jpg',
+    [
+        {label:'Rødlistet: CR', class:'redlist-critical'},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II', class:'badge-bilag2'},
+        {label:'Bilag IV', class:'badge-bilag4'},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Den europæiske ål har en kompleks livscyklus med gydning i Sargassohavet og opvækst i europæiske ferskvande. Arten er kritisk truet og påvirkes stærkt af spærringer, sygdom og overfiskeri. Ålen lever af smådyr og fisk og kan bevæge sig korte afstande på land i fugtige forhold.</p>
+    <!-- citation: turn1search55 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Anguilla_anguilla1.jpg" alt="Europæisk ål">
+    <h2>Europæisk ål</h2>
+    <p class="latin">Anguilla anguilla</p>
+
+    <div class="badges">
+        <span class="badge redlist-critical">Rødlistet: CR</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge badge-bilag2">Bilag II</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 4. Stor vandsalamander ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Stor vandsalamander',
+    'Triturus cristatus',
+    'https://upload.wikimedia.org/wikipedia/commons/0/0a/Triturus_cristatus_MHNT.jpg',
+    [
+        {label:'Rødlistet: LC', class:''},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag II', class:'badge-bilag2'},
+        {label:'Bilag IV', class:'badge-bilag4'},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Stor vandsalamander er Danmarks største salamander med mørk vortet hud og en iøjnefaldende orange bug. Hannen udvikler en høj savtakket rygkam i yngletiden. Arten kræver små, fiskefri vandhuller med god solbelysning og rig undervandsvegetation.</p>
+    <!-- citation: turn1search31 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Triturus_cristatus_MHNT.jpg" alt="Stor vandsalamander">
+    <h2>Stor vandsalamander</h2>
+    <p class="latin">Triturus cristatus</p>
+
+    <div class="badges">
+        <span class="badge">Rødlistet: LC</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge badge-bilag2">Bilag II</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 5. Solaborre ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Solaborre',
+    'Lepomis gibbosus',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Lepomis_gibbosus_01.jpg',
+    [
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Solaborren er en farverig nordamerikansk fisk, der danner små territorier og bygger redegruber om sommeren. Den lever af insekter, smådyr og fiskeyngel og kan påvirke hjemmehørende arter negativt i danske søer.</p>
+    <!-- citation: turn1search13 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Lepomis_gibbosus_01.jpg" alt="Solaborre">
+    <h2>Solaborre</h2>
+    <p class="latin">Lepomis gibbosus</p>
+
+    <div class="badges">
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 6. Vandremusling ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Vandremusling',
+    'Dreissena polymorpha',
+    'https://upload.wikimedia.org/wikipedia/commons/6/6b/Dreissena_polymorpha.jpg',
+    [
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Vandremuslingen er en lille filtrerende musling, der kan danne tætte bestande på sten og installationer. Den filtrerer store mængder vand og kan ændre økosystemers struktur markant. Arten betragtes som invasiv.</p>
+    <!-- citation: turn1search37 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Dreissena_polymorpha.jpg" alt="Vandremusling">
+    <h2>Vandremusling</h2>
+    <p class="latin">Dreissena polymorpha</p>
+
+    <div class="badges">
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 7. Lille vandsalamander ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Lille vandsalamander',
+    'Lissotriton vulgaris',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c5/Lissotriton_vulgaris_01.jpg',
+    [
+        {label:'Rødlistet: LC', class:''},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV', class:'badge-bilag4'},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Lille vandsalamander er en almindelig dansk padde med orange bug og mørke prikker. Hannen får en bølget rygkam i yngletiden. Arten yngler i små fiskefri vandhuller og lever på land om sommeren.</p>
+    <!-- citation: turn1search4 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Lissotriton_vulgaris_01.jpg" alt="Lille vandsalamander">
+    <h2>Lille vandsalamander</h2>
+    <p class="latin">Lissotriton vulgaris</p>
+
+    <div class="badges">
+        <span class="badge">Rødlistet: LC</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 8. Prymnesium parvum ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Prymnesium parvum',
+    'Prymnesium parvum',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4c/Prymnesium_parvum.jpg',
+    [
+        {label:'Rødlistet: –', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Prymnesium parvum er en mikroskopisk alge, der kan danne giftige opblomstringer, som påvirker fiskebestande negativt. Arten trives i brakvand og næringsrigt ferskvand.</p>
+    <!-- citation: turn1search19 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Prymnesium_parvum.jpg" alt="Prymnesium parvum">
+    <h2>Prymnesium parvum</h2>
+    <p class="latin">Prymnesium parvum</p>
+
+    <div class="badges">
+        <span class="badge">Rødlistet: –</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 9. Flodkrebs ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Flodkrebs',
+    'Astacus astacus',
+    'https://upload.wikimedia.org/wikipedia/commons/a/a9/Astacus_astacus2.jpg',
+    [
+        {label:'Rødlistet: VU', class:'redlist-vulnerable'},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V', class:'badge-bilag5'}
+    ],
+    `<p>Flodkrebsen er Europas oprindelige ferskvandskrebseart og kræver rene, iltrige søer og vandløb. Arten er truet af invasive krebs og sygdommen krebsepest. Den spiller en vigtig rolle i økosystemet som bunddyr og oprydder.</p>
+    <!-- citation: turn1search9 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Astacus_astacus2.jpg" alt="Flodkrebs">
+    <h2>Flodkrebs</h2>
+    <p class="latin">Astacus astacus</p>
+
+    <div class="badges">
+        <span class="badge redlist-vulnerable">Rødlistet: VU</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge badge-bilag5">Bilag V</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 10. Signalkrebs ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Signalkrebs',
+    'Pacifastacus leniusculus',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Pacifastacus_leniusculus.jpg',
+    [
+        {label:'Rødlistet: –', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Signalkrebsen er en invasiv art, der bærer sygdommen krebsepest. Den udkonkurrerer hurtigt hjemmehørende flodkrebs og kan ændre søers bundmiljø markant.</p>
+    <!-- citation: turn1search51 -->
+    `
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Pacifastacus_leniusculus.jpg" alt="Signalkrebs">
+    <h2>Signalkrebs</h2>
+    <p class="latin">Pacifastacus leniusculus</p>
+
+    <div class="badges">
+        <span class="badge">Rødlistet: –</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 11. Galizisk sumpkrebs ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Galizisk sumpkrebs',
+    'Astacus leptodactylus',
+    'https://upload.wikimedia.org/wikipedia/commons/7/71/Pontastacus_leptodactylus.png',
+    [
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Galizisk sumpkrebs er en indført art, som trives i næringsrige søer og langsomt strømmende vandløb. Den er tolerant over for temperaturvariationer og lavere vandkvalitet end den hjemmehørende flodkrebs, og kan derfor udkonkurrere denne i mange miljøer.</p>
+    <!-- citation: turn1search8 -->
+    `
+)">
+    https://upload.wikimedia.org/wikipedia/commons/7/71/Pontastacus_leptodactylus.png
+    <h2>Galizisk sumpkrebs</h2>
+    <p class="latin">Astacus leptodactylus</p>
+    <div class="badges">
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 12. Rødøret terrapin ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Rødøret terrapin',
+    'Trachemys scripta elegans',
+    'https://upload.wikimedia.org/wikipedia/commons/5/5e/Trachemys_scripta_elegans_closeup.jpg',
+    [
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Rødøret terrapin er en invasive ferskvandsskildpadde, oprindeligt indført som kæledyr. Den kan klare sig i danske søer og vandhuller og påvirke hjemmehørende arter ved at æde frøer, småfisk, planter og insekter. Den formerer sig sjældent i Danmark, men kan stadig være en belastning for økosystemerne.</p>
+    <!-- citation: turn1search54 -->
+    `
+)">
+    https://upload.wikimedia.org/wikipedia/commons/5/5e/Trachemys_scripta_elegans_closeup.jpg
+    <h2>Rødøret terrapin</h2>
+    <p class="latin">Trachemys scripta elegans</p>
+    <div class="badges">
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 13. Grønbroget tudse ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Grønbroget tudse',
+    'Bufotes viridis',
+    'https://upload.wikimedia.org/wikipedia/commons/1/1d/Bufo_viridis_2.jpg',
+    [
+        {label:'Rødlistet: EN', class:'redlist-critical'},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV', class:'badge-bilag4'},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Grønbroget tudse har et markant mønster af grønne pletter og foretrækker solrige, tørre og åbne habitater som strandenge og sandområder. Den yngler i lavvandede, hurtigt opvarmede pytter. Arten er truet af tab af levesteder og fragmentering af populationer.</p>
+    <!-- citation: turn1search35 -->
+    `
+)">
+    https://upload.wikimedia.org/wikipedia/commons/1/1d/Bufo_viridis_2.jpg
+    <h2>Grønbroget tudse</h2>
+    <p class="latin">Bufotes viridis</p>
+    <div class="badges">
+        <span class="badge redlist-critical">Rødlistet: EN</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 14. Strandtudse ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Strandtudse',
+    'Epidalea calamita',
+    'https://upload.wikimedia.org/wikipedia/commons/8/80/Epidalea_calamita_1.jpg',
+    [
+        {label:'Rødlistet: VU', class:'redlist-vulnerable'},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV', class:'badge-bilag4'},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Strandtudsen er en sjælden padde i Danmark, som lever i sandede kystområder med lavvandede, kortlivede ynglevandhuller. Den er afhængig af dynamiske habitater og trues af tilgroning og færre forstyrrede områder.</p>
+    <!-- citation: turn1search36 -->
+    `
+)">
+    https://upload.wikimedia.org/wikipedia/commons/8/80/Epidalea_calamita_1.jpg
+    <h2>Strandtudse</h2>
+    <p class="latin">Epidalea calamita</p>
+    <div class="badges">
+        <span class="badge redlist-vulnerable">Rødlistet: VU</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 15. Europæisk malle ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Europæisk malle',
+    'Silurus glanis',
+    'https://upload.wikimedia.org/wikipedia/commons/3/35/Silurus_glanis_-_Karlsruhe_Zoo_01.jpg',
+    [
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Mallen er en af Europas største ferskvandsfisk og forekommer kun sparsomt i Danmark. Den lever i større søer og kan blive meget stor i andre lande. Arten lever hovedsageligt af fisk, krebsdyr og i nogle tilfælde små vandfugle.</p>
+    <!-- citation: turn1search12 -->
+    `
+)">
+    https://upload.wikimedia.org/wikipedia/commons/3/35/Silurus_glanis_-_Karlsruhe_Zoo_01.jpg
+    <h2>Europæisk malle</h2>
+    <p class="latin">Silurus glanis</p>
+    <div class="badges">
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ===== 16. Karpe ===== -->
+<!-- ========================= -->
+
+<div class="card" onclick="openModal(
+    'Karpe',
+    'Cyprinus carpio',
+    'https://upload.wikimedia.org/wikipedia/commons/0/0b/Cyprinus_carpio.jpeg',
+    [
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''},
+        {label:'Bilag II: –', class:''},
+        {label:'Bilag IV: –', class:''},
+        {label:'Bilag V: –', class:''}
+    ],
+    `<p>Karpen er en robust og varmelskende art, som foretrækker lavvandede, næringsrige søer. Den kan gøre vandet uklart ved at rode i sedimentet, hvilket påvirker undervandsplanter og dyreliv.</p>
+    <!-- citation: turn1search16 -->
+    `
+)">
+    https://upload.wikimedia.org/wikipedia/commons/0/0b/Cyprinus_carpio.jpeg
+    <h2>Karpe</h2>
+    <p class="latin">Cyprinus carpio</p>
+    <div class="badges">
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+        <span class="badge">Bilag II: –</span>
+        <span class="badge">Bilag IV: –</span>
+        <span class="badge">Bilag V: –</span>
+    </div>
+</div>
+
+</div> <!-- end .grid -->
+
+<script>
+/**
+ * Efter DOM er klar:
+ * 1) Find kort der har en rå URL-linje (fx "https://upload.wikimedia...jpg") og
+ *    indsæt dynamisk et <img> som første element i kortet.
+ * 2) Dette reparerer evt. indhold, hvor billedet ellers ville fremstå som tekst.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.card').forEach(card => {
+    // Find første tekstnode der indeholder en URL
+    const nodes = Array.from(card.childNodes);
+    for (const n of nodes) {
+      if (n.nodeType === Node.TEXT_NODE) {
+        const txt = (n.textContent || '').trim();
+        if (txt.startsWith('http://') || txt.startsWith('https://')) {
+          // Opret billedet
+          const img = document.createElement('img');
+          img.src = txt;
+          img.alt = (card.querySelector('h2')?.textContent || 'Art');
+          img.loading = 'lazy';
+
+          // Indsæt billedet øverst i kortet og fjern rå URL-tekstnoden
+          card.insertBefore(img, card.firstChild);
+          n.remove();
+          break;
+        }
+      }
+    }
+  });
+});
+
+/**
+ * ÅBN MODAL
+ * title: dansk navn
+ * latin: latinsk navn
+ * imgUrl: billede til modal
+ * badges: [{label:'Rødlistet: LC', class:''}, {label:'Fredet', class:'badge-protected'}, ...]
+ * htmlDescription: HTML med beskrivelsestekst
+ */
+function openModal(title, latin, imgUrl, badges, htmlDescription) {
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+
+  // Udfyld indhold
+  const img = document.getElementById('modalImg');
+  img.src = imgUrl || '';
+  img.alt = title || 'Art';
+
+  document.getElementById('modalTitle').textContent = title || '';
+  document.getElementById('modalLatin').textContent = latin || '';
+
+  // Badges
+  const wrap = document.getElementById('modalBadges');
+  wrap.innerHTML = '';
+  (badges || []).forEach(b => {
+    const span = document.createElement('span');
+    span.className = 'badge ' + (b.class || '');
+    span.textContent = b.label || '';
+    wrap.appendChild(span);
+  });
+
+  // Beskrivelse
+  const desc = document.getElementById('modalDescription');
+  desc.innerHTML = htmlDescription || '';
+
+  // Vis modal
+  overlay.classList.add('active');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+/** LUK MODAL */
+function closeModal() {
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  overlay.classList.remove('active');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Klik på overlay lukker
+document.getElementById('modalOverlay').addEventListener('click', closeModal);
+
+// ESC lukker
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+
 </body>
 </html>
