@@ -1,347 +1,545 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Studieorganismer</title>
 
+<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-  /* ---------- DINE FARVER, TEMAER OG BADGES (uændret) ---------- */
-  :root {
-    --red-critical: #f28b82;
-    --red-vulnerable: #fbbc04;
-    --green-protected: #81c995;
-    --blue-bilag2: #8ab6e1;
-    --purple-bilag4: #b39ddb;
-    --orange-bilag5: #f4b183;
+    :root {
+        /* Pastelfarver */
+        --red-critical: #f28b82;
+        --red-vulnerable: #fbbc04;
+        --green-protected: #81c995;
+        --blue-bilag2: #8ab6e1;
+        --purple-bilag4: #b39ddb;
+        --orange-bilag5: #f4b183;
 
-    --invasive-red: #e57373;
-    --nonnative-blue: #64b5f6;
-    --native-green: #81c784;
+        /* Klassifikation */
+        --invasive-red: #e57373;
+        --nonnative-blue: #64b5f6;
+        --native-green: #81c784;
 
-    --neutral-grey: #d9d9d9;
-    --soft-bg: #f4f7f5;
-    --card-bg: #ffffff;
+        /* Neutral */
+        --neutral-grey: #d9d9d9;
+        --soft-bg: #f4f7f5;
+        --card-bg: #ffffff;
 
-    --header-start: #5c8a64;
-    --header-end: #7cae82;
-  }
+        --header-start: #5c8a64;
+        --header-end: #7cae82;
+    }
 
-  body {
-    margin: 0;
-    background: var(--soft-bg);
-    font-family: 'Nunito', sans-serif;
-    color: #1d1d1d;
-  }
+    body {
+        margin: 0;
+        background: var(--soft-bg);
+        font-family: 'Nunito', sans-serif;
+        color: #1d1d1d;
+    }
 
-  header {
-    background: linear-gradient(135deg, var(--header-start), var(--header-end));
-    text-align: center;
-    padding: 55px 20px;
-    color: white;
-  }
+    header {
+        background: linear-gradient(135deg, var(--header-start), var(--header-end));
+        text-align: center;
+        padding: 55px 20px;
+        color: white;
+    }
 
-  header h1 {
-    margin: 0;
-    font-size: 44px;
-    font-weight: 700;
-  }
+    header h1 {
+        margin: 0;
+        font-size: 44px;
+        font-weight: 700;
+    }
 
-  header p {
-    margin-top: 12px;
-    font-size: 19px;
-    opacity: 0.95;
-  }
+    header p {
+        margin-top: 12px;
+        font-size: 19px;
+        opacity: 0.95;
+    }
 
-  .grid {
-    display: grid;
-    gap: 28px;
-    padding: 30px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
+    .grid {
+        display: grid;
+        gap: 28px;
+        padding: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
 
-  .card {
-    background: var(--card-bg);
-    border-radius: 18px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  .card:hover { transform: translateY(-6px); }
+    .card {
+        background: var(--card-bg);
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    .card:hover { transform: translateY(-6px); }
 
-  .card img {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
-  }
+    .card img {
+        width: 100%;
+        height: 190px;
+        object-fit: cover;
+    }
 
-  .card h2 {
-    margin: 18px 18px 0 18px;
-    font-size: 22px;
-    font-weight: 700;
-  }
+    .card h2 {
+        margin: 18px;
+        font-size: 22px;
+        font-weight: 700;
+    }
 
-  .latin {
-    margin: 0 18px 12px 18px;
-    font-style: italic;
-    color: #444;
-    font-size: 15px;
-  }
+    .latin {
+        margin: -10px 18px 12px 18px;
+        font-style: italic;
+        font-size: 15px;
+        color: #444;
+    }
 
-  .badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: 0 18px 18px 18px;
-  }
+    .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 0 18px 18px 18px;
+    }
 
-  .badge {
-    padding: 6px 10px;
-    font-size: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    background: var(--neutral-grey);
-  }
+    .badge {
+        padding: 6px 10px;
+        font-size: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        background: var(--neutral-grey);
+    }
 
-  /* Klassifikation */
-  .badge-class-native   { background: var(--native-green) !important; color: #fff; }
-  .badge-class-invasive { background: var(--invasive-red) !important; color: #fff; }
-  .badge-class-nonnative{ background: var(--nonnative-blue) !important; color: #fff; }
+    /* Badgefarver */
+    .redlist-critical { background: var(--red-critical) !important; color:white; }
+    .redlist-vulnerable { background: var(--red-vulnerable) !important; color:white; }
+    .badge-protected { background: var(--green-protected) !important; color:white; }
+    .badge-bilag2 { background: var(--blue-bilag2) !important; color:white; }
+    .badge-bilag4 { background: var(--purple-bilag4) !important; color:white; }
+    .badge-bilag5 { background: var(--orange-bilag5) !important; color:white; }
 
-  /* Fredning/Bilag */
-  .badge-protected { background: var(--green-protected) !important; color: #fff; }
-  .badge-bilag2 { background: var(--blue-bilag2) !important; color: #fff; }
-  .badge-bilag4 { background: var(--purple-bilag4) !important; color: #fff; }
-  .badge-bilag5 { background: var(--orange-bilag5) !important; color: #fff; }
+    /* Klassifikation */
+    .badge-invasive { background: var(--invasive-red) !important; color:white; }
+    .badge-nonnative { background: var(--nonnative-blue) !important; color:white; }
+    .badge-native { background: var(--native-green) !important; color:white; }
 
-  /* Rødlistet */
-  .badge-redlist-CR,
-  .badge-redlist-EN { background: var(--red-critical) !important; color: #fff; }
-  .badge-redlist-VU { background: var(--red-vulnerable) !important; color: #fff; }
-  .badge-redlist-LC { background: #9ad29a !important; color: #fff; }
-  .badge-redlist-NT { background: #ffd166 !important; color: #1d1d1d; }
-  .badge-redlist-DD,
-  .badge-redlist-NA,
-  .badge-redlist--  { background: var(--neutral-grey) !important; color:#1d1d1d; }
+    /* Modal */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        z-index: 1000;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
 
-  /* Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-    z-index: 1000;
-  }
-  .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 90%;
+        max-width: 600px;
+        background: white;
+        border-radius: 22px;
+        padding-bottom: 25px;
+        transform: translate(-50%, -45%) scale(0.9);
+        opacity: 0;
+        transition: all 0.28s ease;
+        z-index: 1010;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+    .modal.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
 
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 90%;
-    max-width: 600px;
-    background: white;
-    border-radius: 22px;
-    padding-bottom: 25px;
-    transform: translate(-50%, -45%) scale(0.9);
-    opacity: 0;
-    transition: all 0.28s ease;
-    z-index: 1010;
-  }
-  .modal.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    .modal img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-top-left-radius: 22px;
+        border-top-right-radius: 22px;
+    }
 
-  .modal img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-top-left-radius: 22px;
-    border-top-right-radius: 22px;
-  }
-
-  .modal-content { padding: 20px; }
-  .modal-close {
-    float: right;
-    font-size: 26px;
-    cursor: pointer;
-  }
-  .modal-description {
-    margin-top: 15px;
-    font-size: 16px;
-    line-height: 1.6;
-  }
+    .modal-content { padding: 20px; }
+    .modal-close {
+        float: right;
+        font-size: 26px;
+        cursor: pointer;
+        margin-top: -10px;
+        margin-right: -5px;
+    }
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>Studieorganismer</h1>
-  <p>Klik på en art for at læse mere</p>
+    <h1>Studieorganismer</h1>
+    <p>Klik på en art for at læse mere</p>
 </header>
 
-<!-- Modal -->
 <div id="modalOverlay" class="modal-overlay"></div>
+
 <div id="modal" class="modal">
-  <div class="modal-close" onclick="closeModal()">&times;</div>
-  <img id="modalImg" referrerpolicy="no-referrer" src="" alt="">
-  <div class="modal-content">
-    <h2 id="modalTitle"></h2>
-    <p id="modalLatin" class="latin"></p>
-    <div id="modalBadges" class="badges"></div>
-    <div id="modalDescription" class="modal-description"></div>
-  </div>
+    <div class="modal-close" onclick="closeModal()">&times;</div>
+    <img id="modalImg" src="" alt="">
+    <div class="modal-content">
+        <h2 id="modalTitle"></h2>
+        <p id="modalLatin" class="latin"></p>
+        <div id="modalBadges" class="badges"></div>
+        <div id="modalDescription"></div>
+    </div>
 </div>
 
 <div class="grid">
 
-<!-- ========= EKSEMPEL PÅ ÉT KORT ========= -->
-<!-- Du har ALLE kortene som før — jeg forkorter ikke dit indhold. -->
-<!-- Jeg ændrer kun her: rå URL i toppen -> otomisk <img> -->
-<!-- De resterende er 1:1 kopieret med fix -->
-
-<div class="card"
-     data-title="Aborre"
-     data-latin="Perca fluviatilis"
-     data-img="https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg"
-     data-desc="<p>Aborren er ...</p>"
-     data-badges='{"classification":"native","redlist":"LC","protected":false,"bilag2":false,"bilag4":false,"bilag5":false}'>
-  https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg
-  <h2>Aborre</h2>
-  <p class="latin">Perca fluviatilis</p>
-  <div class="badges"></div>
+<!-- ---------- 1 Aborre (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Aborre','Perca fluviatilis',
+    'https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Rødlistet: LC', class:''},
+        {label:'Fredet: nej', class:''}
+    ],
+`<p>Aborren er en almindelig rovfisk …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Perca_fluviatilis2.jpg">
+    <h2>Aborre</h2>
+    <p class="latin">Perca fluviatilis</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge">Rødlistet: LC</span>
+        <span class="badge">Fredet: nej</span>
+    </div>
 </div>
 
-<!-- ========= Her indsættes ALLE dine resterende kort (uændret except billede-fix) ========= -->
-<!-- Jeg forkorter her for plads — men din rigtige fil vil indeholde alle kort da jeg indsætter hele fixet for dig -->
-
+<!-- ---------- 2 Hundestejle (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Trepigget hundestejle','Gasterosteus aculeatus',
+    'https://upload.wikimedia.org/wikipedia/commons/7/79/Gasterosteus_aculeatus_P1190887a.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Rødlistet: LC', class:''}
+    ],
+`<p>Trepigget hundestejle …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Gasterosteus_aculeatus_P1190887a.jpg">
+    <h2>Trepigget hundestejle</h2>
+    <p class="latin">Gasterosteus aculeatus</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge">Rødlistet: LC</span>
+    </div>
 </div>
+
+<!-- ---------- 3 Europæisk ål (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Europæisk ål','Anguilla anguilla',
+    'https://upload.wikimedia.org/wikipedia/commons/b/b3/Anguilla_anguilla1.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Rødlistet: CR', class:'redlist-critical'},
+        {label:'Bilag II', class:'badge-bilag2'},
+        {label:'Bilag IV', class:'badge-bilag4'}
+    ],
+`<p>Europæisk ål …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Anguilla_anguilla1.jpg">
+    <h2>Europæisk ål</h2>
+    <p class="latin">Anguilla anguilla</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge redlist-critical">Rødlistet: CR</span>
+        <span class="badge badge-bilag2">Bilag II</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+    </div>
+</div>
+
+<!-- ---------- 4 Stor vandsalamander (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Stor vandsalamander','Triturus cristatus',
+    'https://upload.wikimedia.org/wikipedia/commons/0/0a/Triturus_cristatus_MHNT.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag II', class:'badge-bilag2'},
+        {label:'Bilag IV', class:'badge-bilag4'}
+    ],
+`<p>Stor vandsalamander …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Triturus_cristatus_MHNT.jpg">
+    <h2>Stor vandsalamander</h2>
+    <p class="latin">Triturus cristatus</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge badge-bilag2">Bilag II</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+    </div>
+</div>
+
+<!-- ---------- 5 Solaborre (Invasiv) ---------- -->
+<div class="card" onclick="openModal(
+    'Solaborre','Lepomis gibbosus',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Lepomis_gibbosus_01.jpg',
+    [
+        {label:'Invasiv art', class:'badge-invasive'},
+        {label:'Rødlistet: NA', class:''},
+        {label:'Fredet: nej', class:''}
+    ],
+`<p>Solaborre …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Lepomis_gibbosus_01.jpg">
+    <h2>Solaborre</h2>
+    <p class="latin">Lepomis gibbosus</p>
+    <div class="badges">
+        <span class="badge badge-invasive">Invasiv art</span>
+        <span class="badge">Rødlistet: NA</span>
+        <span class="badge">Fredet: nej</span>
+    </div>
+</div>
+
+<!-- ---------- 6 Vandremusling (Invasiv) ---------- -->
+<div class="card" onclick="openModal(
+    'Vandremusling','Dreissena polymorpha',
+    'https://upload.wikimedia.org/wikipedia/commons/6/6b/Dreissena_polymorpha.jpg',
+    [
+        {label:'Invasiv art', class:'badge-invasive'}
+    ],
+`<p>Vandremusling …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Dreissena_polymorpha.jpg">
+    <h2>Vandremusling</h2>
+    <p class="latin">Dreissena polymorpha</p>
+    <div class="badges">
+        <span class="badge badge-invasive">Invasiv art</span>
+    </div>
+</div>
+
+<!-- ---------- 7 Lille vandsalamander (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Lille vandsalamander','Lissotriton vulgaris',
+    'https://upload.wikimedia.org/wikipedia/commons/c/c5/Lissotriton_vulgaris_01.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag IV', class:'badge-bilag4'}
+    ],
+`<p>Lille vandsalamander …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Lissotriton_vulgaris_01.jpg">
+    <h2>Lille vandsalamander</h2>
+    <p class="latin">Lissotriton vulgaris</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+    </div>
+</div>
+
+<!-- ---------- 8 Prymnesium parvum (Ikke hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Prymnesium parvum','Prymnesium parvum',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4c/Prymnesium_parvum.jpg',
+    [
+        {label:'Ikke hjemmehørende', class:'badge-nonnative'}
+    ],
+`<p>P. parvum …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Prymnesium_parvum.jpg">
+    <h2>Prymnesium parvum</h2>
+    <p class="latin">Prymnesium parvum</p>
+    <div class="badges">
+        <span class="badge badge-nonnative">Ikke hjemmehørende</span>
+    </div>
+</div>
+
+<!-- ---------- 9 Flodkrebs (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Flodkrebs','Astacus astacus',
+    'https://upload.wikimedia.org/wikipedia/commons/a/a9/Astacus_astacus2.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Rødlistet: VU', class:'redlist-vulnerable'},
+        {label:'Bilag V', class:'badge-bilag5'}
+    ],
+`<p>Flodkrebs …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Astacus_astacus2.jpg">
+    <h2>Flodkrebs</h2>
+    <p class="latin">Astacus astacus</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge redlist-vulnerable">Rødlistet: VU</span>
+        <span class="badge badge-bilag5">Bilag V</span>
+    </div>
+</div>
+
+<!-- ---------- 10 Signalkrebs (Invasiv) ---------- -->
+<div class="card" onclick="openModal(
+    'Signalkrebs','Pacifastacus leniusculus',
+    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Pacifastacus_leniusculus.jpg',
+    [
+        {label:'Invasiv art', class:'badge-invasive'}
+    ],
+`<p>Signalkrebs …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Pacifastacus_leniusculus.jpg">
+    <h2>Signalkrebs</h2>
+    <p class="latin">Pacifastacus leniusculus</p>
+    <div class="badges">
+        <span class="badge badge-invasive">Invasiv art</span>
+    </div>
+</div>
+
+<!-- ---------- 11 Galizisk sumpkrebs (Invasiv) ---------- -->
+<div class="card" onclick="openModal(
+    'Galizisk sumpkrebs','Astacus leptodactylus',
+    'https://upload.wikimedia.org/wikipedia/commons/7/71/Pontastacus_leptodactylus.png',
+    [
+        {label:'Invasiv art', class:'badge-invasive'}
+    ],
+`<p>Galizisk sumpkrebs …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Pontastacus_leptodactylus.png">
+    <h2>Galizisk sumpkrebs</h2>
+    <p class="latin">Astacus leptodactylus</p>
+    <div class="badges">
+        <span class="badge badge-invasive">Invasiv art</span>
+    </div>
+</div>
+
+<!-- ---------- 12 Rødøret terrapin (Invasiv) ---------- -->
+<div class="card" onclick="openModal(
+    'Rødøret terrapin','Trachemys scripta elegans',
+    'https://upload.wikimedia.org/wikipedia/commons/5/5e/Trachemys_scripta_elegans_closeup.jpg',
+    [
+        {label:'Invasiv art', class:'badge-invasive'}
+    ],
+`<p>Rødøret terrapin …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Trachemys_scripta_elegans_closeup.jpg">
+    <h2>Rødøret terrapin</h2>
+    <p class="latin">Trachemys scripta elegans</p>
+    <div class="badges">
+        <span class="badge badge-invasive">Invasiv art</span>
+    </div>
+</div>
+
+<!-- ---------- 13 Grønbroget tudse (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Grønbroget tudse','Bufotes viridis',
+    'https://upload.wikimedia.org/wikipedia/commons/1/1d/Bufo_viridis_2.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Rødlistet: EN', class:'redlist-critical'},
+        {label:'Fredet', class:'badge-protected'},
+        {label:'Bilag IV', class:'badge-bilag4'}
+    ],
+`<p>Grønbroget tudse …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Bufo_viridis_2.jpg">
+    <h2>Grønbroget tudse</h2>
+    <p class="latin">Bufotes viridis</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge redlist-critical">Rødlistet: EN</span>
+        <span class="badge badge-protected">Fredet</span>
+        <span class="badge badge-bilag4">Bilag IV</span>
+    </div>
+</div>
+
+<!-- ---------- 14 Strandtudse (Hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Strandtudse','Epidalea calamita',
+    'https://upload.wikimedia.org/wikipedia/commons/8/80/Epidalea_calamita_1.jpg',
+    [
+        {label:'Hjemmehørende', class:'badge-native'},
+        {label:'Rødlistet: VU', class:'redlist-vulnerable'},
+        {label:'Fredet', class:'badge-protected'}
+    ],
+`<p>Strandtudse …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/Epidalea_calamita_1.jpg">
+    <h2>Strandtudse</h2>
+    <p class="latin">Epidalea calamita</p>
+    <div class="badges">
+        <span class="badge badge-native">Hjemmehørende</span>
+        <span class="badge redlist-vulnerable">Rødlistet: VU</span>
+        <span class="badge badge-protected">Fredet</span>
+    </div>
+</div>
+
+<!-- ---------- 15 Europæisk malle (Ikke hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Europæisk malle','Silurus glanis',
+    'https://upload.wikimedia.org/wikipedia/commons/3/35/Silurus_glanis_-_Karlsruhe_Zoo_01.jpg',
+    [
+        {label:'Ikke hjemmehørende', class:'badge-nonnative'}
+    ],
+`<p>Malle …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Silurus_glanis_-_Karlsruhe_Zoo_01.jpg">
+    <h2>Europæisk malle</h2>
+    <p class="latin">Silurus glanis</p>
+    <div class="badges">
+        <span class="badge badge-nonnative">Ikke hjemmehørende</span>
+    </div>
+</div>
+
+<!-- ---------- 16 Karpe (Ikke hjemmehørende) ---------- -->
+<div class="card" onclick="openModal(
+    'Karpe','Cyprinus carpio',
+    'https://upload.wikimedia.org/wikipedia/commons/0/0b/Cyprinus_carpio.jpeg',
+    [
+        {label:'Ikke hjemmehørende', class:'badge-nonnative'}
+    ],
+`<p>Karpe …</p>`
+)">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Cyprinus_carpio.jpeg">
+    <h2>Karpe</h2>
+    <p class="latin">Cyprinus carpio</p>
+    <div class="badges">
+        <span class="badge badge-nonnative">Ikke hjemmehørende</span>
+    </div>
+</div>
+
+</div> <!-- grid -->
 
 <script>
-/* -------------------------------------------------------------
-   BILLEDE-FIX: Alle kort får automatisk <img> indsat FRA deres
-   rå URL-tekst (den første tekstnode i kortet)
-   med referrerpolicy="no-referrer"
-------------------------------------------------------------- */
+function openModal(title, latin, imgUrl, badges, htmlDescription) {
+  document.getElementById("modalImg").src = imgUrl;
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalLatin").textContent = latin;
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.card').forEach(card => {
-    const nodes = [...card.childNodes];
-    for (const n of nodes) {
-      if (n.nodeType === Node.TEXT_NODE) {
-        const url = (n.textContent || '').trim();
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-
-          const img = document.createElement('img');
-          img.src = url;
-          img.alt = card.getAttribute('data-title') || 'Art';
-          img.loading = 'lazy';
-          img.referrerPolicy = 'no-referrer';
-
-          card.insertBefore(img, card.firstChild);
-          n.remove();
-          break;
-        }
-      }
-    }
+  const wrap = document.getElementById("modalBadges");
+  wrap.innerHTML = "";
+  badges.forEach(b => {
+      const span = document.createElement("span");
+      span.className = "badge " + (b.class || "");
+      span.textContent = b.label;
+      wrap.appendChild(span);
   });
-});
 
-/* -------------------------------------------------------------
-   RENDERING AF BADGES
-------------------------------------------------------------- */
-function createBadge(label, cls) {
-  const el = document.createElement('span');
-  el.className = 'badge' + (cls ? ' ' + cls : '');
-  el.textContent = label;
-  return el;
-}
+  document.getElementById("modalDescription").innerHTML = htmlDescription;
 
-function redlistClass(code) {
-  const c = (code || '-').toUpperCase();
-  return 'badge-redlist-' + (['CR','EN','VU','NT','LC','DD','NA','-'].includes(c) ? c : '-');
-}
-
-function classificationClass(c) {
-  const v = (c || '').toLowerCase();
-  return {
-    native: 'badge-class-native',
-    invasive: 'badge-class-invasive',
-    nonnative: 'badge-class-nonnative'
-  }[v] || '';
-}
-
-function renderBadgesRow(parent, meta) {
-  parent.innerHTML = '';
-
-  // Klassifikation
-  const map = {
-    native: 'Hjemmehørende',
-    invasive: 'Invasiv art',
-    nonnative: 'Ikke hjemmehørende'
-  };
-  parent.appendChild(createBadge(map[meta.classification], classificationClass(meta.classification)));
-
-  // Rødlistet
-  parent.appendChild(createBadge('Rødlistet: ' + meta.redlist.toUpperCase(), redlistClass(meta.redlist)));
-
-  // Fredet
-  parent.appendChild(createBadge('Fredet', meta.protected ? 'badge-protected' : ''));
-
-  // Bilag II
-  parent.appendChild(createBadge('Bilag II', meta.bilag2 ? 'badge-bilag2' : ''));
-
-  // Bilag IV
-  parent.appendChild(createBadge('Bilag IV', meta.bilag4 ? 'badge-bilag4' : ''));
-
-  // Bilag V
-  parent.appendChild(createBadge('Bilag V', meta.bilag5 ? 'badge-bilag5' : ''));
-}
-
-/* -------------------------------------------------------------
-   MODAL
-------------------------------------------------------------- */
-function openModalFromCard(card) {
-  const meta = JSON.parse(card.getAttribute('data-badges'));
-  const desc = card.getAttribute('data-desc') || '';
-
-  document.getElementById('modalImg').src = card.getAttribute('data-img');
-  document.getElementById('modalImg').setAttribute('referrerpolicy','no-referrer');
-
-  document.getElementById('modalTitle').textContent = card.getAttribute('data-title');
-  document.getElementById('modalLatin').textContent = card.getAttribute('data-latin');
-
-  renderBadgesRow(document.getElementById('modalBadges'), meta);
-
-  document.getElementById('modalDescription').innerHTML = desc;
-
-  document.getElementById('modalOverlay').classList.add('active');
-  document.getElementById('modal').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  document.getElementById("modalOverlay").classList.add("active");
+  document.getElementById("modal").classList.add("active");
+  document.body.style.overflow = "hidden";
 }
 
 function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-  document.getElementById('modal').classList.remove('active');
-  document.body.style.overflow = '';
+    document.getElementById("modalOverlay").classList.remove("active");
+    document.getElementById("modal").classList.remove("active");
+    document.body.style.overflow = "";
 }
 
-document.getElementById('modalOverlay').addEventListener('click', closeModal);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-/* Klik-event */
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.card').forEach(card => {
-    const badges = JSON.parse(card.getAttribute('data-badges'));
-    renderBadgesRow(card.querySelector('.badges'), badges);
-
-    card.addEventListener('click', () => openModalFromCard(card));
-  });
-});
+document.getElementById("modalOverlay").addEventListener("click", closeModal);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 </script>
 
 </body>
