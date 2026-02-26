@@ -721,7 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mapLink) {
       const speciesName = card.getAttribute('data-title');
       const encodedSpeciesName = encodeURIComponent(speciesName);
-      const targetUrl = `https://sorenthromsholdt.github.io/e-dna/?species=${encodedSpeciesName}&registration_status=${encodeURIComponent('registreret i begge prøver')}`;
+      const targetUrl = `https://sorenthromsholdt.github.io/e-dna/?species=${encodedSpeciesName}&presence=both`;
       mapLink.href = targetUrl;
       mapLink.setAttribute('target', '_blank'); // Open in new tab
 
